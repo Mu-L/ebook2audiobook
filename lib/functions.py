@@ -43,6 +43,13 @@ from urllib.parse import urlparse
 import lib.conf as conf
 import lib.lang as lang
 
+# Testing out Auralis as a TTS engine
+from auralis import TTS as ATTS, TTSRequest
+
+# Initialize
+atts = ATTS().from_pretrained("AstraMindAI/xttsv2", gpt_model='AstraMindAI/xtts2-gpt')
+
+
 def inject_configs(target_namespace):
     # Extract variables from both modules and inject them into the target namespace
     for module in (conf, lang):
@@ -622,13 +629,18 @@ def convert_sentence_to_audio(params, session):
         }
         if params['tts_model'] == 'xtts':
             if session['custom_model'] is not None or session['fine_tuned'] != 'std':
-                output = params['tts'].inference(
-                    text=params['sentence'],
-                    language=session['metadata']['language_iso1'],
-                    gpt_cond_latent=params['gpt_cond_latent'],
-                    speaker_embedding=params['speaker_embedding'],
-                    **generation_params
+                #output = params['tts'].inference(
+                #    text=params['sentence'],
+                #    language=session['metadata']['language_iso1'],
+                #    gpt_cond_latent=params['gpt_cond_latent'],
+                #    speaker_embedding=params['speaker_embedding'],
+                #    **generation_params
+                #)
+                request = TTSRequest(
+                text=params['sentence'],
+                speaker_files= "content/voices/eng/elder/male/DavidAttenborough_24khz.wav"
                 )
+                output = tts.generate_speech(request)
                 torchaudio.save(
                     params['sentence_audio_file'], 
                     torch.tensor(output[audioproc_format]).unsqueeze(0), 
