@@ -641,11 +641,12 @@ def convert_sentence_to_audio(params, session):
                 speaker_files= "content/voices/eng/elder/male/DavidAttenborough_24khz.wav"
                 )
                 output = tts.generate_speech(request)
-                torchaudio.save(
-                    params['sentence_audio_file'], 
-                    torch.tensor(output[audioproc_format]).unsqueeze(0), 
-                    sample_rate=24000
-                )
+                #torchaudio.save(
+                #    params['sentence_audio_file'], 
+                #    torch.tensor(output[audioproc_format]).unsqueeze(0), 
+                #    sample_rate=24000
+                #)
+                output.save(params['sentence_audio_file'])
             else:
                 params['tts'].tts_to_file(
                     text=params['sentence'],
