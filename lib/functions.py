@@ -520,25 +520,26 @@ def convert_chapters_to_audio(session):
                 #    return False
                 #params['gpt_cond_latent'], params['speaker_embedding'] = params['tts'].get_conditioning_latents(audio_path=[params['voice_file']])
             elif session['fine_tuned'] != 'std':
-                print(f"Loading TTS {params['tts_model']} model from {session['fine_tuned']}...")
-                hf_repo = models[params['tts_model']][session['fine_tuned']]['repo']
-                hf_sub = models[params['tts_model']][session['fine_tuned']]['sub']
-                cache_dir = os.path.join(models_dir,'tts')
-                model_path = hf_hub_download(repo_id=hf_repo, filename=f"{hf_sub}/model.pth", cache_dir=cache_dir)
-                config_path = hf_hub_download(repo_id=hf_repo, filename=f"{hf_sub}/config.json", cache_dir=cache_dir)
-                vocab_path = hf_hub_download(repo_id=hf_repo, filename=f"{hf_sub}/vocab.json", cache_dir=cache_dir)             
-                config = XttsConfig()
-                config.models_dir = cache_dir
-                config.load_json(config_path)
-                params['tts'] = Xtts.init_from_config(config)
-                params['tts'].load_checkpoint(config, checkpoint_path=model_path, vocab_path=vocab_path, eval=True)
-                print('Computing speaker latents...')
-                params['voice_file'] = session['voice_file'] if session['voice_file'] is not None else models[params['tts_model']][session['fine_tuned']]['voice']
-                params['voice_file'] = normalize_audio_file(params['voice_file'], session)
-                if params['voice_file'] is None:
-                    print('Voice file cannot be normalized!')
-                    return False
-                params['gpt_cond_latent'], params['speaker_embedding'] = params['tts'].get_conditioning_latents(audio_path=[params['voice_file']])
+                print(f"skipping xtts loading lol")
+                #print(f"Loading TTS {params['tts_model']} model from {session['fine_tuned']}...")
+                #hf_repo = models[params['tts_model']][session['fine_tuned']]['repo']
+                #hf_sub = models[params['tts_model']][session['fine_tuned']]['sub']
+                #cache_dir = os.path.join(models_dir,'tts')
+                #model_path = hf_hub_download(repo_id=hf_repo, filename=f"{hf_sub}/model.pth", cache_dir=cache_dir)
+                #config_path = hf_hub_download(repo_id=hf_repo, filename=f"{hf_sub}/config.json", cache_dir=cache_dir)
+                #vocab_path = hf_hub_download(repo_id=hf_repo, filename=f"{hf_sub}/vocab.json", cache_dir=cache_dir)             
+                #config = XttsConfig()
+                #config.models_dir = cache_dir
+                #config.load_json(config_path)
+                #params['tts'] = Xtts.init_from_config(config)
+                #params['tts'].load_checkpoint(config, checkpoint_path=model_path, vocab_path=vocab_path, eval=True)
+                #print('Computing speaker latents...')
+                #params['voice_file'] = session['voice_file'] if session['voice_file'] is not None else models[params['tts_model']][session['fine_tuned']]['voice']
+                #params['voice_file'] = normalize_audio_file(params['voice_file'], session)
+                #if params['voice_file'] is None:
+                #    print('Voice file cannot be normalized!')
+                #    return False
+                #params['gpt_cond_latent'], params['speaker_embedding'] = params['tts'].get_conditioning_latents(audio_path=[params['voice_file']])
             else:
                 print(f"Loading TTS {params['tts_model']} model from {models[params['tts_model']][session['fine_tuned']]['repo']}...")
                 params['tts'] = XTTS(model_name=models[params['tts_model']][session['fine_tuned']]['repo'])
@@ -549,12 +550,13 @@ def convert_chapters_to_audio(session):
                     return False
             params['tts'].to(session['device'])
         else:
-            params['tts_model'] = 'fairseq'
-            model_repo = models[params['tts_model']][session['fine_tuned']]['repo'].replace("[lang]", session['metadata']['language'])
-            print(f"Loading TTS {model_repo} model from {model_repo}...")
-            params['tts'] = XTTS(model_repo)
-            params['voice_file'] = session['voice_file'] if session['voice_file'] is not None else models[params['tts_model']][session['fine_tuned']]['voice']
-            params['tts'].to(session['device'])
+            print(f"skipping xtts loading lol")
+            #params['tts_model'] = 'fairseq'
+            #model_repo = models[params['tts_model']][session['fine_tuned']]['repo'].replace("[lang]", session['metadata']['language'])
+            #print(f"Loading TTS {model_repo} model from {model_repo}...")
+            #params['tts'] = XTTS(model_repo)
+            #params['voice_file'] = session['voice_file'] if session['voice_file'] is not None else models[params['tts_model']][session['fine_tuned']]['voice']
+            #params['tts'].to(session['device'])
 
         resume_chapter = 0
         resume_sentence = 0
